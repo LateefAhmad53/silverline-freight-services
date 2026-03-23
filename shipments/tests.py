@@ -63,9 +63,9 @@ class BackendAuthTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = get_user_model().objects.create_superuser(
-            username="smithlinda99360@gmail.com",
-            email="smithlinda99360@gmail.com",
-            password="Admin2026",
+            username="admin@example.com",
+            email="admin@example.com",
+            password="TestPass123!",
         )
         self.order = ShipmentOrder.objects.create(
             from_address="Lagos",
@@ -75,7 +75,7 @@ class BackendAuthTests(TestCase):
         )
 
     def test_login_and_dashboard_access(self):
-        logged_in = self.client.login(username=self.user.username, password="Admin2026")
+        logged_in = self.client.login(username=self.user.username, password="TestPass123!")
         self.assertTrue(logged_in)
         response = self.client.get(reverse("dashboard"))
         self.assertEqual(response.status_code, 200)
@@ -83,7 +83,7 @@ class BackendAuthTests(TestCase):
         self.assertIn("chart_values", response.context)
 
     def test_progress_can_be_updated_from_backend(self):
-        self.client.login(username=self.user.username, password="Admin2026")
+        self.client.login(username=self.user.username, password="TestPass123!")
         response = self.client.post(
             reverse("update_progress", kwargs={"order_id": self.order.id}),
             {"progress_percent": 75},
@@ -93,13 +93,13 @@ class BackendAuthTests(TestCase):
         self.assertEqual(self.order.progress_percent, 75)
 
     def test_dashboard_search_filters_by_tracking_number(self):
-        self.client.login(username=self.user.username, password="Admin2026")
+        self.client.login(username=self.user.username, password="TestPass123!")
         response = self.client.get(reverse("dashboard"), {"tracking": self.order.tracking_number})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.order.tracking_number)
 
     def test_edit_order_updates_item_name(self):
-        self.client.login(username=self.user.username, password="Admin2026")
+        self.client.login(username=self.user.username, password="TestPass123!")
         response = self.client.post(
             reverse("edit_order", kwargs={"order_id": self.order.id}),
             {
@@ -122,7 +122,7 @@ class BackendAuthTests(TestCase):
         self.assertEqual(self.order.item_name, "Updated Chairs")
 
     def test_delete_order_removes_record(self):
-        self.client.login(username=self.user.username, password="Admin2026")
+        self.client.login(username=self.user.username, password="TestPass123!")
         response = self.client.post(reverse("delete_order", kwargs={"order_id": self.order.id}))
         self.assertEqual(response.status_code, 302)
         self.assertFalse(ShipmentOrder.objects.filter(id=self.order.id).exists())

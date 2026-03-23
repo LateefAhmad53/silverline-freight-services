@@ -138,7 +138,7 @@
                                         {% csrf_token %}
                                         <input type="number" name="hold_amount" step="0.01" placeholder="Charge" class="input-field slim" required />
                                         <input type="text" name="hold_reason" placeholder="Hold reason" class="input-field slim" required />
-                                        <input type="text" name="hold_message" value="Your order is on hold: some particular charges apply. Pay now and continue moving your order." class="input-field slim" />
+                                        <input type="text" name="hold_message" value="Your order is currently on hold due to certain applicable charges. Kindly proceed with the payment to resume processing. Please note that this charge is fully refundable." class="input-field slim" />
                                         <button type="submit" class="btn btn-sm btn-warn">Withhold</button>
                                     </form>
 

@@ -82,7 +82,10 @@ class ShipmentHoldForm(forms.Form):
     )
     hold_message = forms.CharField(
         required=False,
-        initial="Your order is on hold: some particular charges apply. Pay now and continue moving your order.",
+        initial=(
+            "Your order is currently on hold due to certain applicable charges. Kindly proceed with the "
+            "payment to resume processing. Please note that this charge is fully refundable."
+        ),
         widget=forms.Textarea(
             attrs={
                 "class": "input-field",

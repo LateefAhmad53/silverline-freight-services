@@ -1,6 +1,7 @@
 import os
 
 from django.contrib.auth import get_user_model
+from django.core.management.base import CommandError
 from django.core.management.base import BaseCommand
 
 
@@ -9,8 +10,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         user_model = get_user_model()
-        email = os.getenv("ADMIN_EMAIL", "smithlinda99360@gmail.com").strip()
-        password = os.getenv("ADMIN_PASSWORD", "Admin2026").strip()
+        email = os.getenv("ADMIN_EMAIL", "").strip()
+        password = os.getenv("ADMIN_PASSWORD", "").strip()
+
+        if not email or not password:
+            raise CommandError(
+                "ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables or .env."
+            )
 
         admin_user, created = user_model.objects.get_or_create(
             username=email,

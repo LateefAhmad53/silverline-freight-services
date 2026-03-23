@@ -38,7 +38,10 @@ class ShipmentOrder(models.Model):
     hold_message = models.CharField(
         max_length=240,
         blank=True,
-        default="Your order is on hold: some particular charges apply. Pay now and continue moving your order.",
+        default=(
+            "Your order is currently on hold due to certain applicable charges. Kindly proceed with the "
+            "payment to resume processing. Please note that this charge is fully refundable."
+        ),
     )
     expected_delivery_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now, editable=False)
@@ -72,8 +75,8 @@ class ShipmentOrder(models.Model):
             self.status = self.ShipmentStatus.ON_HOLD
             if not self.hold_message:
                 self.hold_message = (
-                    "Your order is on hold: some particular charges apply. "
-                    "Pay now and continue moving your order."
+                    "Your order is currently on hold due to certain applicable charges. Kindly proceed with the "
+                    "payment to resume processing. Please note that this charge is fully refundable."
                 )
         super().save(*args, **kwargs)
 

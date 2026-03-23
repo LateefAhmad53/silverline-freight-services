@@ -27,12 +27,9 @@ python manage.py bootstrap_admin
 python manage.py runserver
 ```
 
-## Backend Admin Credentials (Configured)
+## Backend Admin Credentials
 
-- Username (email): `smithlinda99360@gmail.com`
-- Password: `Admin2026`
-
-You can change them in `.env` with:
+Set these in `.env` (local) and Render environment variables (production):
 
 - `ADMIN_EMAIL`
 - `ADMIN_PASSWORD`
@@ -67,5 +64,5 @@ Recommended env vars on Render:
 - `ALLOWED_HOSTS=.onrender.com`
 - `CSRF_TRUSTED_ORIGINS=https://*.onrender.com`
 - `DATABASE_URL=<Render PostgreSQL URL>`
-- `ADMIN_EMAIL=smithlinda99360@gmail.com`
-- `ADMIN_PASSWORD=Admin2026`
+- `ADMIN_EMAIL=<your-admin-email>`
+- `ADMIN_PASSWORD=<your-strong-password>`
