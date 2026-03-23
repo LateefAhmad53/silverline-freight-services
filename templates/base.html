@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}SILVERLINE Freight Services{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/site.css' %}" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-wrap">
+            <a class="brand" href="{% url 'home' %}">
+                <img src="{% static 'images/silverline-logo.jpg' %}" alt="SILVERLINE Freight Services logo" />
+                <div>
+                    <p class="brand-name">SILVERLINE</p>
+                    <p class="brand-sub">Freight Services</p>
+                </div>
+            </a>
+            <nav>
+                <a href="{% url 'home' %}#tracking">Track Order</a>
+                <a href="{% url 'services' %}">Services</a>
+                <a href="{% url 'home' %}#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    {% if messages %}
+        <div class="container alerts">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <footer id="contact" class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <h3>SILVERLINE Freight Services</h3>
+                <p>Reliable freight logistics and transparent order visibility for every client.</p>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <p>Email: support@silverlinefreight.com</p>
+                <p>24/7 Logistics Desk</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/site.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

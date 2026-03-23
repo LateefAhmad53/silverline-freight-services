@@ -1,0 +1,1 @@
+web: python manage.py migrate && python manage.py bootstrap_admin && gunicorn silverline_backend.wsgi:application

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}SILVERLINE Freight Services | Track Shipment{% endblock %}
+{% block content %}
+<main>
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-copy reveal">
+                <p class="eyebrow">Global Logistics Engine</p>
+                <h1>Fast, Trusted, and Fully Trackable Delivery Operations.</h1>
+                <p>SILVERLINE Freight Services gives your clients live tracking visibility while your operations team controls delivery flow from one backend.</p>
+                <div class="hero-actions">
+                    <a href="#tracking" class="btn btn-primary">Track A Shipment</a>
+                    <a href="{% url 'services' %}" class="btn btn-outline">Explore Services</a>
+                </div>
+            </div>
+
+            <div class="hero-visual reveal delay-1">
+                <img src="{% static 'images/hero-cargo.svg' %}" alt="Cargo shipment operation illustration" />
+                <div class="hero-panel">
+                    <h3>Operational Highlights</h3>
+                    <ul>
+                        <li>Real backend-generated tracking numbers</li>
+                        <li>Automated hold and release workflow</li>
+                        <li>Dedicated admin portal and order controls</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tracking" class="tracking-section">
+        <div class="container">
+            <div class="section-head reveal">
+                <p class="eyebrow">Client Tracking Portal</p>
+                <h2>Track your order by tracking number</h2>
+            </div>
+            <form method="get" class="track-form reveal delay-1">
+                {{ track_form.tracking_number }}
+                <button type="submit" class="btn btn-primary">Track Now</button>
+            </form>
+
+            {% if lookup_attempted %}
+                <div class="tracking-card reveal delay-2">
+                    {% if order %}
+                        <h3>Shipment: {{ order.tracking_number }}</h3>
+                        <div class="tracking-grid">
+                            <div>
+                                <p class="label">From</p>
+                                <p>{{ order.from_address }}</p>
+                            </div>
+                            <div>
+                                <p class="label">To</p>
+                                <p>{{ order.to_address }}</p>
+                            </div>
+                            <div>
+                                <p class="label">Current Location</p>
+                                <p>{{ order.current_location|default:"In route processing center" }}</p>
+                            </div>
+                            <div>
+                                <p class="label">Status</p>
+                                <p class="status-pill {{ order.status }}">{{ order.get_status_display }}</p>
+                            </div>
+                        </div>
+
+                        <div class="progress-block">
+                            <div class="progress-head">
+                                <h4>Live Delivery Progress</h4>
+                                <span>{{ order.progress_percent }}%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: {{ order.progress_percent }}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="item-details">
+                            <h4>Shipment Item Details</h4>
+                            <div class="item-grid">
+                                <p><strong>Item Name:</strong> {{ order.item_name }}</p>
+                                <p><strong>Quantity:</strong> {{ order.item_quantity }}</p>
+                                {% if order.item_weight_kg %}
+                                    <p><strong>Weight:</strong> {{ order.item_weight_kg }} kg</p>
+                                {% endif %}
+                                {% if order.item_description %}
+                                    <p class="item-description"><strong>Description:</strong> {{ order.item_description }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if order.expected_delivery_date %}
+                            <p class="eta">Estimated delivery: {{ order.expected_delivery_date }}</p>
+                        {% endif %}
+
+                        {% if order.hold_active %}
+                            <div class="hold-banner">
+                                <h4>Shipment Alert</h4>
+                                <p>{{ order.hold_message }}</p>
+                                {% if order.hold_amount %}
+                                    <p class="hold-amount">Hold Charge: ${{ order.hold_amount }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <h3>No shipment found</h3>
+                        <p>Tracking number <strong>{{ tracking_number }}</strong> is not in our system yet. Please verify and try again.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container section-head reveal">
+            <p class="eyebrow">Service Lines</p>
+            <h2>Shipping services built for speed and control</h2>
+        </div>
+
+        <div class="container cards reveal delay-1">
+            <article>
+                <img src="{% static 'images/truck-route.svg' %}" alt="Trucking and inland freight illustration" />
+                <h3>Freight Dispatch</h3>
+                <p>Cross-region freight planning with tightly monitored transit checkpoints.</p>
+            </article>
+            <article>
+                <img src="{% static 'images/port-logistics.svg' %}" alt="Port and ocean logistics illustration" />
+                <h3>Commercial Logistics</h3>
+                <p>Scalable support for high-volume business shipping with SLA-backed movement.</p>
+            </article>
+            <article>
+                <img src="{% static 'images/warehouse-ops.svg' %}" alt="Warehouse operations illustration" />
+                <h3>Express Handling</h3>
+                <p>Priority handling lanes for urgent shipments requiring accelerated delivery.</p>
+            </article>
+        </div>
+
+        <div class="container services-cta reveal delay-2">
+            <a href="{% url 'services' %}" class="btn btn-primary">View Full Services</a>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Backend Login | SILVERLINE Freight Services{% endblock %}
+{% block content %}
+<main class="auth-main">
+    <section class="auth-card reveal">
+        <p class="eyebrow">Backend Access</p>
+        <h1>Admin Sign In</h1>
+        <p>Use your backend credentials to manage shipment orders.</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="field-group">
+                <label for="{{ form.username.id_for_label }}">Admin Email</label>
+                {{ form.username }}
+            </div>
+            <div class="field-group">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </div>
+            {% if form.errors %}
+                <p class="form-error">Invalid login details. Confirm email/password and try again.</p>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,20 @@
+<svg width="760" height="520" viewBox="0 0 760 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="760" height="520" rx="30" fill="#E9F3FB"/>
+<rect x="40" y="80" width="680" height="360" rx="24" fill="#FFFFFF"/>
+<rect x="80" y="130" width="300" height="190" rx="16" fill="#0F5B84"/>
+<rect x="98" y="150" width="265" height="12" rx="6" fill="#5EA6CF"/>
+<rect x="98" y="178" width="210" height="10" rx="5" fill="#B5D7EC"/>
+<rect x="98" y="204" width="236" height="10" rx="5" fill="#B5D7EC"/>
+<rect x="98" y="230" width="182" height="10" rx="5" fill="#B5D7EC"/>
+<rect x="420" y="160" width="270" height="150" rx="18" fill="#EFF6FB"/>
+<rect x="450" y="190" width="210" height="20" rx="10" fill="#0F5B84"/>
+<rect x="450" y="226" width="156" height="12" rx="6" fill="#99C7E3"/>
+<rect x="450" y="250" width="128" height="12" rx="6" fill="#99C7E3"/>
+<rect x="130" y="350" width="500" height="18" rx="9" fill="#DCEAF5"/>
+<circle cx="190" cy="350" r="26" fill="#093954"/>
+<circle cx="190" cy="350" r="11" fill="#EAF4FB"/>
+<circle cx="568" cy="350" r="26" fill="#093954"/>
+<circle cx="568" cy="350" r="11" fill="#EAF4FB"/>
+<rect x="310" y="315" width="210" height="36" rx="18" fill="#D98F30"/>
+<text x="345" y="339" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="15">SILVERLINE</text>
+</svg>

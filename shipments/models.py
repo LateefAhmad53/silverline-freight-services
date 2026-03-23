@@ -1,0 +1,91 @@
+import secrets
+import string
+
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+from django.utils import timezone
+
+
+class ShipmentOrder(models.Model):
+    class ShipmentStatus(models.TextChoices):
+        PENDING = "pending", "Pending Pickup"
+        IN_TRANSIT = "in_transit", "In Transit"
+        ON_HOLD = "on_hold", "On Hold"
+        DELIVERED = "delivered", "Delivered"
+
+    tracking_number = models.CharField(max_length=14, unique=True, editable=False, db_index=True)
+    from_address = models.TextField()
+    to_address = models.TextField()
+    item_name = models.CharField(max_length=180, default="General Cargo")
+    item_description = models.TextField(blank=True)
+    item_quantity = models.PositiveIntegerField(default=1)
+    item_weight_kg = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    sender_name = models.CharField(max_length=140, blank=True)
+    receiver_name = models.CharField(max_length=140, blank=True)
+    current_location = models.CharField(max_length=180, blank=True, default="Processing Hub")
+    progress_percent = models.PositiveSmallIntegerField(
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
+    status = models.CharField(
+        max_length=24,
+        choices=ShipmentStatus.choices,
+        default=ShipmentStatus.PENDING,
+    )
+    hold_active = models.BooleanField(default=False)
+    hold_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    hold_reason = models.TextField(blank=True)
+    hold_message = models.CharField(
+        max_length=240,
+        blank=True,
+        default="Your order is on hold: some particular charges apply. Pay now and continue moving your order.",
+    )
+    expected_delivery_date = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.tracking_number} - {self.get_status_display()}"
+
+    @staticmethod
+    def _build_tracking_number():
+        alphabet = string.ascii_uppercase + string.digits
+        suffix = "".join(secrets.choice(alphabet) for _ in range(10))
+        return f"SLF{suffix}"
+
+    def save(self, *args, **kwargs):
+        if not self.tracking_number:
+            candidate = self._build_tracking_number()
+            while ShipmentOrder.objects.filter(tracking_number=candidate).exists():
+                candidate = self._build_tracking_number()
+            self.tracking_number = candidate
+
+        if self.progress_percent > 100:
+            self.progress_percent = 100
+        if self.status == self.ShipmentStatus.DELIVERED and self.progress_percent < 100:
+            self.progress_percent = 100
+
+        if self.hold_active:
+            self.status = self.ShipmentStatus.ON_HOLD
+            if not self.hold_message:
+                self.hold_message = (
+                    "Your order is on hold: some particular charges apply. "
+                    "Pay now and continue moving your order."
+                )
+        super().save(*args, **kwargs)
+
+    def place_on_hold(self, amount, reason, message=None):
+        self.hold_active = True
+        self.hold_amount = amount
+        self.hold_reason = reason
+        self.hold_message = message or self.hold_message
+        self.status = self.ShipmentStatus.ON_HOLD
+        self.save(update_fields=["hold_active", "hold_amount", "hold_reason", "hold_message", "status", "updated_at"])
+
+    def release_hold(self):
+        self.hold_active = False
+        self.status = self.ShipmentStatus.IN_TRANSIT
+        self.save(update_fields=["hold_active", "status", "updated_at"])

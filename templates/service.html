@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Services | SILVERLINE Freight Services{% endblock %}
+{% block content %}
+<main class="service-main">
+    <section class="service-hero">
+        <div class="container service-hero-grid">
+            <div class="reveal">
+                <p class="eyebrow">SILVERLINE Services</p>
+                <h1>End-to-end freight and delivery solutions for every shipment class.</h1>
+                <p>From pickups to final-mile handoff, SILVERLINE runs a controlled logistics network with clear status updates and accountable handling.</p>
+                <a href="{% url 'home' %}#tracking" class="btn btn-primary">Track Shipment</a>
+            </div>
+            <img class="reveal delay-1" src="{% static 'images/hero-cargo.svg' %}" alt="Freight service illustration" />
+        </div>
+    </section>
+
+    <section class="service-catalog">
+        <div class="container section-head reveal">
+            <p class="eyebrow">What We Offer</p>
+            <h2>Complete logistics coverage</h2>
+        </div>
+        <div class="container service-cards reveal delay-1">
+            <article>
+                <img src="{% static 'images/truck-route.svg' %}" alt="Ground freight icon" />
+                <h3>Ground Freight Delivery</h3>
+                <p>Regional and cross-border road freight with checkpoint logging and monitored transit updates.</p>
+            </article>
+            <article>
+                <img src="{% static 'images/port-logistics.svg' %}" alt="Ocean freight icon" />
+                <h3>Ocean and Port Logistics</h3>
+                <p>Container movement support, customs stage visibility, and coordinated dispatch from seaport terminals.</p>
+            </article>
+            <article>
+                <img src="{% static 'images/warehouse-ops.svg' %}" alt="Warehouse icon" />
+                <h3>Warehousing and Fulfillment</h3>
+                <p>Inventory handling, secure storage, order consolidation, and dispatch preparation for final delivery.</p>
+            </article>
+            <article>
+                <img src="{% static 'images/truck-route.svg' %}" alt="Express shipping icon" />
+                <h3>Priority Express Shipments</h3>
+                <p>Rapid handling lanes for sensitive, urgent, or high-value shipments requiring faster delivery cycles.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="process-section">
+        <div class="container section-head reveal">
+            <p class="eyebrow">Operational Process</p>
+            <h2>How SILVERLINE moves your shipment</h2>
+        </div>
+        <div class="container process-grid reveal delay-1">
+            <article>
+                <span>01</span>
+                <h3>Order Creation</h3>
+                <p>Backend generates a unique tracking number with route and item details.</p>
+            </article>
+            <article>
+                <span>02</span>
+                <h3>Transit Monitoring</h3>
+                <p>Logistics team updates location and status as cargo moves through hubs.</p>
+            </article>
+            <article>
+                <span>03</span>
+                <h3>Hold/Release Control</h3>
+                <p>If charges apply, order is held and client sees payment notice in tracking view.</p>
+            </article>
+            <article>
+                <span>04</span>
+                <h3>Delivery Completion</h3>
+                <p>After release and final movement, shipment is marked delivered in backend.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="service-cta">
+        <div class="container reveal">
+            <h2>Need to manage shipments immediately?</h2>
+            <p>Login to backend and create new orders with complete item and destination details.</p>
+            <a href="{% url 'backend_login' %}" class="btn btn-primary">Open Backend</a>
+        </div>
+    </section>
+</main>
+{% endblock %}

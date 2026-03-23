@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Backend Dashboard | SILVERLINE Freight Services{% endblock %}
+{% block content %}
+<main class="dashboard-main">
+    <section class="container dashboard-head reveal">
+        <div>
+            <p class="eyebrow">Admin Backend</p>
+            <h1>Shipment Control Center</h1>
+        </div>
+        <form method="post" action="{% url 'backend_logout' %}">
+            {% csrf_token %}
+            <button class="btn btn-outline" type="submit">Logout</button>
+        </form>
+    </section>
+
+    <section class="container dashboard-grid">
+        <article class="card reveal">
+            <h2>Create New Order</h2>
+            <form method="post" action="{% url 'create_order' %}" class="stack-form">
+                {% csrf_token %}
+                {% for field in create_form %}
+                    <div class="field-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <small class="form-error">{{ field.errors|striptags }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Generate Tracking Number</button>
+            </form>
+        </article>
+
+        <article class="card wide reveal delay-1">
+            <h2>All Shipment Orders</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tracking</th>
+                            <th>Route</th>
+                            <th>Items</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Hold</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>
+                                    <strong>{{ order.tracking_number }}</strong><br />
+                                    <small>{{ order.created_at|date:"Y-m-d H:i" }}</small>
+                                </td>
+                                <td>
+                                    <small>From:</small> {{ order.from_address|truncatechars:50 }}<br />
+                                    <small>To:</small> {{ order.to_address|truncatechars:50 }}
+                                </td>
+                                <td>
+                                    <strong>{{ order.item_name }}</strong><br />
+                                    <small>Qty: {{ order.item_quantity }}</small>
+                                    {% if order.item_weight_kg %}
+                                        <br /><small>{{ order.item_weight_kg }} kg</small>
+                                    {% endif %}
+                                    {% if order.item_description %}
+                                        <p><small>{{ order.item_description|truncatechars:80 }}</small></p>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ order.progress_percent }}%</strong>
+                                    <div class="mini-progress-track">
+                                        <div class="mini-progress-fill" style="width: {{ order.progress_percent }}%;"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if order.hold_active %}
+                                        <strong>On Hold</strong><br />
+                                        {% if order.hold_amount %}<small>${{ order.hold_amount }}</small>{% endif %}
+                                    {% else %}
+                                        <small>None</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'update_progress' order.id %}" class="inline-form progress-update-form">
+                                        {% csrf_token %}
+                                        <input
+                                            type="range"
+                                            name="progress_percent"
+                                            min="0"
+                                            max="100"
+                                            value="{{ order.progress_percent }}"
+                                            class="progress-slider"
+                                            data-target="progress-value-{{ order.id }}"
+                                        />
+                                        <span class="progress-value" id="progress-value-{{ order.id }}">{{ order.progress_percent }}%</span>
+                                        <button type="submit" class="btn btn-sm">Set Progress</button>
+                                    </form>
+
+                                    <form method="post" action="{% url 'update_status' order.id %}" class="inline-form">
+                                        {% csrf_token %}
+                                        <select name="status" class="input-field slim">
+                                            {% for value, label in order.ShipmentStatus.choices %}
+                                                <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input class="input-field slim" name="current_location" value="{{ order.current_location }}" />
+                                        <input class="input-field slim" type="date" name="expected_delivery_date" value="{{ order.expected_delivery_date|date:'Y-m-d' }}" />
+                                        <button type="submit" class="btn btn-sm">Update</button>
+                                    </form>
+
+                                    <form method="post" action="{% url 'place_hold' order.id %}" class="inline-form hold-form">
+                                        {% csrf_token %}
+                                        <input type="number" name="hold_amount" step="0.01" placeholder="Charge" class="input-field slim" required />
+                                        <input type="text" name="hold_reason" placeholder="Hold reason" class="input-field slim" required />
+                                        <input type="text" name="hold_message" value="Your order is on hold: some particular charges apply. Pay now and continue moving your order." class="input-field slim" />
+                                        <button type="submit" class="btn btn-sm btn-warn">Withhold</button>
+                                    </form>
+
+                                    <form method="post" action="{% url 'release_hold' order.id %}" class="inline-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success">Release Hold</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7">No shipments yet. Create the first order from this dashboard.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+</main>
+{% endblock %}
