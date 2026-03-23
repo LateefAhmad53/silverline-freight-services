@@ -250,6 +250,62 @@ nav a:hover {
     padding: 1.35rem;
 }
 
+.tracking-report {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.tracking-report-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.tracking-report-head h3 {
+    margin: 0.25rem 0 0;
+    font-family: "Sora", sans-serif;
+}
+
+.tracking-table-wrap {
+    border: 1px solid #d9e7f2;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.tracking-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tracking-table th,
+.tracking-table td {
+    text-align: left;
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid #edf1f6;
+}
+
+.tracking-table th {
+    width: 210px;
+    background: #f8fbff;
+    font-size: 0.79rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #516f87;
+}
+
+.tracking-table td {
+    color: #1f3247;
+    font-size: 0.92rem;
+}
+
+.tracking-table tbody tr:last-child th,
+.tracking-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
 .tracking-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(200px, 1fr));
@@ -595,14 +651,14 @@ nav a:hover {
     overflow-x: auto;
 }
 
-table {
+.table-wrap table {
     width: 100%;
     border-collapse: collapse;
     min-width: 960px;
 }
 
-th,
-td {
+.table-wrap th,
+.table-wrap td {
     border-bottom: 1px solid #e9edf2;
     text-align: left;
     vertical-align: top;
@@ -610,7 +666,7 @@ td {
     font-size: 0.9rem;
 }
 
-th {
+.table-wrap th {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -932,6 +988,22 @@ th {
     .tracking-grid,
     .item-grid {
         grid-template-columns: 1fr;
+    }
+
+    .tracking-table th,
+    .tracking-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .tracking-table th {
+        border-bottom: none;
+        padding-bottom: 0.3rem;
+    }
+
+    .tracking-table td {
+        padding-top: 0;
+        padding-bottom: 0.75rem;
     }
 
     .cards {

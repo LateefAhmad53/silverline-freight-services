@@ -43,53 +43,73 @@
             {% if lookup_attempted %}
                 <div class="tracking-card reveal delay-2">
                     {% if order %}
-                        <h3>Shipment: {{ order.tracking_number }}</h3>
-                        <div class="tracking-grid">
-                            <div>
-                                <p class="label">From</p>
-                                <p>{{ order.from_address }}</p>
+                        <div class="tracking-report">
+                            <div class="tracking-report-head">
+                                <div>
+                                    <p class="label">Tracking Number</p>
+                                    <h3>{{ order.tracking_number }}</h3>
+                                </div>
+                                <div>
+                                    <p class="label">Current Status</p>
+                                    <p class="status-pill {{ order.status }}">{{ order.get_status_display }}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="label">To</p>
-                                <p>{{ order.to_address }}</p>
+
+                            <div class="progress-block">
+                                <div class="progress-head">
+                                    <h4>Live Delivery Progress</h4>
+                                    <span>{{ order.progress_percent }}%</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: {{ order.progress_percent }}%;"></div>
+                                </div>
                             </div>
-                            <div>
-                                <p class="label">Current Location</p>
-                                <p>{{ order.current_location|default:"In route processing center" }}</p>
-                            </div>
-                            <div>
-                                <p class="label">Status</p>
-                                <p class="status-pill {{ order.status }}">{{ order.get_status_display }}</p>
+
+                            <div class="tracking-table-wrap">
+                                <table class="tracking-table">
+                                    <tbody>
+                                        <tr>
+                                            <th>From Address</th>
+                                            <td>{{ order.from_address }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>To Address</th>
+                                            <td>{{ order.to_address }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Current Location</th>
+                                            <td>{{ order.current_location|default:"In route processing center" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Shipment Item</th>
+                                            <td>{{ order.item_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Quantity</th>
+                                            <td>{{ order.item_quantity }}</td>
+                                        </tr>
+                                        {% if order.item_weight_kg %}
+                                            <tr>
+                                                <th>Weight</th>
+                                                <td>{{ order.item_weight_kg }} kg</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if order.item_description %}
+                                            <tr>
+                                                <th>Item Description</th>
+                                                <td>{{ order.item_description }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if order.expected_delivery_date %}
+                                            <tr>
+                                                <th>Estimated Delivery</th>
+                                                <td>{{ order.expected_delivery_date }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-
-                        <div class="progress-block">
-                            <div class="progress-head">
-                                <h4>Live Delivery Progress</h4>
-                                <span>{{ order.progress_percent }}%</span>
-                            </div>
-                            <div class="progress-track">
-                                <div class="progress-fill" style="width: {{ order.progress_percent }}%;"></div>
-                            </div>
-                        </div>
-
-                        <div class="item-details">
-                            <h4>Shipment Item Details</h4>
-                            <div class="item-grid">
-                                <p><strong>Item Name:</strong> {{ order.item_name }}</p>
-                                <p><strong>Quantity:</strong> {{ order.item_quantity }}</p>
-                                {% if order.item_weight_kg %}
-                                    <p><strong>Weight:</strong> {{ order.item_weight_kg }} kg</p>
-                                {% endif %}
-                                {% if order.item_description %}
-                                    <p class="item-description"><strong>Description:</strong> {{ order.item_description }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        {% if order.expected_delivery_date %}
-                            <p class="eta">Estimated delivery: {{ order.expected_delivery_date }}</p>
-                        {% endif %}
 
                         {% if order.hold_active %}
                             <div class="hold-banner">
