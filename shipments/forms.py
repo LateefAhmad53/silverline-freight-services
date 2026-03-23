@@ -64,6 +64,10 @@ class ShipmentOrderCreateForm(forms.ModelForm):
         }
 
 
+class ShipmentOrderEditForm(ShipmentOrderCreateForm):
+    """Uses the same editable fields as create form for backend order edits."""
+
+
 class ShipmentHoldForm(forms.Form):
     hold_amount = forms.DecimalField(
         max_digits=10,

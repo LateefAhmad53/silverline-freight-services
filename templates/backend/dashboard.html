@@ -13,6 +13,20 @@
         </form>
     </section>
 
+    <section class="container dashboard-toolbar reveal delay-1">
+        <form method="get" class="dashboard-search-form">
+            <input
+                type="text"
+                name="tracking"
+                value="{{ search_query }}"
+                class="input-field"
+                placeholder="Search order by tracking number"
+            />
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline">Reset</a>
+        </form>
+    </section>
+
     <section class="container dashboard-grid">
         <article class="card reveal">
             <h2>Create New Order</h2>
@@ -85,6 +99,14 @@
                                     {% endif %}
                                 </td>
                                 <td>
+                                    <div class="quick-row-actions">
+                                        <a href="{% url 'edit_order' order.id %}" class="btn btn-sm btn-outline">Edit</a>
+                                        <form method="post" action="{% url 'delete_order' order.id %}" onsubmit="return confirm('Delete this order permanently?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+
                                     <form method="post" action="{% url 'update_progress' order.id %}" class="inline-form progress-update-form">
                                         {% csrf_token %}
                                         <input
@@ -128,7 +150,7 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="7">No shipments yet. Create the first order from this dashboard.</td>
+                                <td colspan="7">No shipments match your query yet. Create a new order or reset search.</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -136,5 +158,69 @@
             </div>
         </article>
     </section>
+
+    <section class="container analytics-panel reveal delay-2">
+        <h2>Backend Analytics</h2>
+        <div class="analytics-cards">
+            <article>
+                <p>Total Orders</p>
+                <h3>{{ total_orders }}</h3>
+            </article>
+            <article>
+                <p>Delivered</p>
+                <h3>{{ delivered_orders }}</h3>
+            </article>
+            <article>
+                <p>In Transit</p>
+                <h3>{{ transit_orders }}</h3>
+            </article>
+            <article>
+                <p>On Hold</p>
+                <h3>{{ hold_orders }}</h3>
+            </article>
+            <article>
+                <p>Created Today</p>
+                <h3>{{ today_orders }}</h3>
+            </article>
+        </div>
+        <div class="analytics-chart-card">
+            <h3>Orders Created (Last 7 Days)</h3>
+            <canvas id="ordersTrendChart" height="100"></canvas>
+        </div>
+    </section>
 </main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const chartNode = document.getElementById("ordersTrendChart");
+        if (chartNode) {
+            new Chart(chartNode, {
+                type: "bar",
+                data: {
+                    labels: {{ chart_labels|safe }},
+                    datasets: [{
+                        label: "Orders",
+                        data: {{ chart_values|safe }},
+                        backgroundColor: "#2f95cb",
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 {% endblock %}

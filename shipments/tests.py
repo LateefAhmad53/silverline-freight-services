@@ -67,20 +67,62 @@ class BackendAuthTests(TestCase):
             email="smithlinda99360@gmail.com",
             password="Admin2026",
         )
+        self.order = ShipmentOrder.objects.create(
+            from_address="Lagos",
+            to_address="Abuja",
+            item_name="Office Chairs",
+            item_quantity=20,
+        )
 
     def test_login_and_dashboard_access(self):
         logged_in = self.client.login(username=self.user.username, password="Admin2026")
         self.assertTrue(logged_in)
         response = self.client.get(reverse("dashboard"))
         self.assertEqual(response.status_code, 200)
+        self.assertIn("chart_labels", response.context)
+        self.assertIn("chart_values", response.context)
 
     def test_progress_can_be_updated_from_backend(self):
-        order = ShipmentOrder.objects.create(from_address="A", to_address="B")
         self.client.login(username=self.user.username, password="Admin2026")
         response = self.client.post(
-            reverse("update_progress", kwargs={"order_id": order.id}),
+            reverse("update_progress", kwargs={"order_id": self.order.id}),
             {"progress_percent": 75},
         )
         self.assertEqual(response.status_code, 302)
-        order.refresh_from_db()
-        self.assertEqual(order.progress_percent, 75)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.progress_percent, 75)
+
+    def test_dashboard_search_filters_by_tracking_number(self):
+        self.client.login(username=self.user.username, password="Admin2026")
+        response = self.client.get(reverse("dashboard"), {"tracking": self.order.tracking_number})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.order.tracking_number)
+
+    def test_edit_order_updates_item_name(self):
+        self.client.login(username=self.user.username, password="Admin2026")
+        response = self.client.post(
+            reverse("edit_order", kwargs={"order_id": self.order.id}),
+            {
+                "sender_name": self.order.sender_name,
+                "receiver_name": self.order.receiver_name,
+                "from_address": self.order.from_address,
+                "to_address": self.order.to_address,
+                "item_name": "Updated Chairs",
+                "item_description": self.order.item_description,
+                "item_quantity": self.order.item_quantity,
+                "item_weight_kg": self.order.item_weight_kg or "",
+                "current_location": self.order.current_location,
+                "progress_percent": self.order.progress_percent,
+                "status": self.order.status,
+                "expected_delivery_date": self.order.expected_delivery_date or "",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.item_name, "Updated Chairs")
+
+    def test_delete_order_removes_record(self):
+        self.client.login(username=self.user.username, password="Admin2026")
+        response = self.client.post(reverse("delete_order", kwargs={"order_id": self.order.id}))
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(ShipmentOrder.objects.filter(id=self.order.id).exists())

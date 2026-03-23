@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Edit Order | SILVERLINE Freight Services{% endblock %}
+{% block content %}
+<main class="dashboard-main">
+    <section class="container edit-order-card reveal">
+        <div class="edit-order-head">
+            <div>
+                <p class="eyebrow">Order Editor</p>
+                <h1>Edit Shipment {{ order.tracking_number }}</h1>
+            </div>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline">Back to Dashboard</a>
+        </div>
+
+        <form method="post" class="stack-form">
+            {% csrf_token %}
+            <div class="edit-order-grid">
+                {% for field in form %}
+                    <div class="field-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <small class="form-error">{{ field.errors|striptags }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Save Order Changes</button>
+        </form>
+    </section>
+</main>
+{% endblock %}

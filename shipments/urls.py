@@ -13,4 +13,6 @@ urlpatterns = [
     path("backend/orders/<int:order_id>/release/", views.release_hold, name="release_hold"),
     path("backend/orders/<int:order_id>/status/", views.update_status, name="update_status"),
     path("backend/orders/<int:order_id>/progress/", views.update_progress, name="update_progress"),
+    path("backend/orders/<int:order_id>/edit/", views.edit_order, name="edit_order"),
+    path("backend/orders/<int:order_id>/delete/", views.delete_order, name="delete_order"),
 ]

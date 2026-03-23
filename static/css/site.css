@@ -224,6 +224,11 @@ nav a:hover {
     color: #975010;
 }
 
+.btn-danger {
+    background: #ffe8eb;
+    color: #a11a20;
+}
+
 .tracking-section {
     padding: 2.2rem 0 2.7rem;
 }
@@ -542,6 +547,21 @@ nav a:hover {
     margin-bottom: 1rem;
 }
 
+.dashboard-toolbar {
+    margin-bottom: 0.9rem;
+}
+
+.dashboard-search-form {
+    display: flex;
+    gap: 0.55rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.dashboard-search-form .input-field {
+    max-width: 420px;
+}
+
 .dashboard-head h1 {
     margin: 0.4rem 0 0;
     font-family: "Sora", sans-serif;
@@ -605,6 +625,17 @@ th {
     flex-wrap: wrap;
 }
 
+.quick-row-actions {
+    display: flex;
+    gap: 0.45rem;
+    margin-bottom: 0.45rem;
+    align-items: center;
+}
+
+.quick-row-actions form {
+    margin: 0;
+}
+
 .progress-update-form {
     align-items: center;
 }
@@ -640,6 +671,92 @@ th {
     min-width: 105px;
     padding: 0.45rem 0.5rem;
     font-size: 0.76rem;
+}
+
+.analytics-panel {
+    margin-top: 1rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+}
+
+.analytics-panel h2 {
+    margin: 0 0 0.8rem;
+    font-family: "Sora", sans-serif;
+    font-size: 1.15rem;
+}
+
+.analytics-cards {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(120px, 1fr));
+    gap: 0.7rem;
+}
+
+.analytics-cards article {
+    border: 1px solid #dbe7f1;
+    border-radius: 12px;
+    padding: 0.7rem 0.75rem;
+    background: #f8fbff;
+}
+
+.analytics-cards p {
+    margin: 0;
+    font-size: 0.78rem;
+    color: #557189;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+
+.analytics-cards h3 {
+    margin: 0.4rem 0 0;
+    font-size: 1.3rem;
+    font-family: "Sora", sans-serif;
+}
+
+.analytics-chart-card {
+    margin-top: 0.9rem;
+    border: 1px solid #dbe7f1;
+    border-radius: 12px;
+    padding: 0.8rem;
+    background: #fff;
+    min-height: 260px;
+}
+
+.analytics-chart-card h3 {
+    margin: 0 0 0.8rem;
+    font-family: "Sora", sans-serif;
+}
+
+.edit-order-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+}
+
+.edit-order-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.edit-order-head h1 {
+    margin: 0.35rem 0 0;
+    font-family: "Sora", sans-serif;
+    font-size: 1.5rem;
+}
+
+.edit-order-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.65rem 0.9rem;
+    margin-bottom: 0.8rem;
 }
 
 .service-main {
@@ -791,7 +908,9 @@ th {
     .dashboard-grid,
     .service-hero-grid,
     .service-cards,
-    .process-grid {
+    .process-grid,
+    .analytics-cards,
+    .edit-order-grid {
         grid-template-columns: 1fr;
     }
 
