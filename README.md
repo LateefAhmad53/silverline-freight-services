@@ -66,3 +66,11 @@ Recommended env vars on Render:
 - `DATABASE_URL=<Render PostgreSQL URL>`
 - `ADMIN_EMAIL=<your-admin-email>`
 - `ADMIN_PASSWORD=<your-strong-password>`
+
+## Custom Domain Notes
+
+If you connect a custom domain on Render, you usually do not change Django code.
+You only need to update Render environment variables:
+
+- `ALLOWED_HOSTS=.onrender.com,yourdomain.com,www.yourdomain.com`
+- `CSRF_TRUSTED_ORIGINS=https://*.onrender.com,https://yourdomain.com,https://www.yourdomain.com`
