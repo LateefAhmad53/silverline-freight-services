@@ -78,6 +78,10 @@ class ShipmentOrder(models.Model):
                     "Your order is currently on hold due to certain applicable charges. Kindly proceed with the "
                     "payment to resume processing. Please note that this charge is fully refundable."
                 )
+        else:
+            self.hold_amount = None
+            self.hold_reason = ""
+            self.hold_message = ""
         super().save(*args, **kwargs)
 
     def place_on_hold(self, amount, reason, message=None):
@@ -91,4 +95,16 @@ class ShipmentOrder(models.Model):
     def release_hold(self):
         self.hold_active = False
         self.status = self.ShipmentStatus.IN_TRANSIT
-        self.save(update_fields=["hold_active", "status", "updated_at"])
+        self.hold_amount = None
+        self.hold_reason = ""
+        self.hold_message = ""
+        self.save(
+            update_fields=[
+                "hold_active",
+                "status",
+                "hold_amount",
+                "hold_reason",
+                "hold_message",
+                "updated_at",
+            ]
+        )

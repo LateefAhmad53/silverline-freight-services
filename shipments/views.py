@@ -107,9 +107,10 @@ def _build_receipt_image(order: ShipmentOrder) -> BytesIO:
     draw.rounded_rectangle((60, 40, width - 60, 380), radius=26, fill="#0f5b84")
     draw.text((110, 110), "SILVERLINE Freight Services", fill="white", font=title_font)
     draw.text((110, 220), "Official Shipment Receipt (JPG)", fill="#d5ebf8", font=subtitle_font)
-    draw.text((1400, 125), f"Tracking: {order.tracking_number}", fill="white", font=body_font)
+    draw.rounded_rectangle((1320, 92, width - 120, 328), radius=20, fill="#0b4d71")
+    draw.text((1360, 138), f"Tracking: {order.tracking_number}", fill="white", font=body_font)
     draw.text(
-        (1400, 200),
+        (1360, 218),
         f"Issued: {_invoice_issued_timestamp()}",
         fill="#d5ebf8",
         font=body_font,
@@ -121,6 +122,10 @@ def _build_receipt_image(order: ShipmentOrder) -> BytesIO:
     left_x = 120
     value_x = 640
     value_width = width - value_x - 140
+
+    hold_status = "On Hold" if order.hold_active else "Released / No active hold"
+    hold_charge = f"${order.hold_amount}" if order.hold_active and order.hold_amount else "No active processing charge"
+    hold_reason = order.hold_reason if order.hold_active and order.hold_reason else "-"
 
     rows = [
         ("Sender", order.sender_name or "-"),
@@ -134,10 +139,9 @@ def _build_receipt_image(order: ShipmentOrder) -> BytesIO:
         ("Item Quantity", str(order.item_quantity)),
         ("Item Weight (kg)", str(order.item_weight_kg or "-")),
         ("Expected Delivery", str(order.expected_delivery_date or "-")),
-        (
-            "Hold Charge",
-            f"${order.hold_amount}" if order.hold_amount else "No active processing charge",
-        ),
+        ("Hold Status", hold_status),
+        ("Hold Charge", hold_charge),
+        ("Hold Reason", hold_reason),
     ]
 
     for label, value in rows:
