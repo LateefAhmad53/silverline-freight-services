@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <defs>
+    <linearGradient id="bgBack" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f2f7fc"/>
+      <stop offset="45%" stop-color="#e3f0f8"/>
+      <stop offset="100%" stop-color="#d5e9f5"/>
+    </linearGradient>
+    <linearGradient id="panelBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f4f73"/>
+      <stop offset="100%" stop-color="#0b3550"/>
+    </linearGradient>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 50px; font-weight: 800; fill: #103f5d; }
+      .sub { font-family: Arial, sans-serif; font-size: 24px; font-weight: 600; fill: #2d5f7d; }
+      .sectionTitle { font-family: Arial, sans-serif; font-size: 34px; font-weight: 800; fill: #ffffff; }
+      .bodyW { font-family: Arial, sans-serif; font-size: 25px; fill: #e7f4fb; }
+      .bodyD { font-family: Arial, sans-serif; font-size: 24px; fill: #1f3f55; }
+      .chip { font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #114f73; }
+      .cta { font-family: Arial, sans-serif; font-size: 30px; font-weight: 800; fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1080" height="1350" fill="url(#bgBack)"/>
+  <rect x="70" y="70" width="940" height="180" rx="24" fill="#ffffff" opacity="0.95"/>
+  <text x="110" y="155" class="title">Backend + Operations Features</text>
+  <text x="110" y="204" class="sub">Built for transparent shipment control and customer confidence</text>
+
+  <rect x="70" y="285" width="940" height="720" rx="26" fill="url(#panelBack)"/>
+  <text x="120" y="360" class="sectionTitle">What the Admin Dashboard Handles</text>
+
+  <g class="bodyW">
+    <text x="125" y="425">• Generate real tracking numbers from backend order details</text>
+    <text x="125" y="478">• Search any order instantly by tracking number</text>
+    <text x="125" y="531">• Edit and update route, status, and progress live</text>
+    <text x="125" y="584">• Withhold shipments when charges apply</text>
+    <text x="125" y="637">• Release held orders immediately after payment confirmation</text>
+    <text x="125" y="690">• Delete completed or old records when required</text>
+    <text x="125" y="743">• Daily analytics chart and operational summary</text>
+    <text x="125" y="796">• Download updated JPG receipt per order anytime</text>
+  </g>
+
+  <rect x="110" y="845" width="860" height="130" rx="18" fill="#ffffff"/>
+  <text x="140" y="900" class="chip">Receipt Generation (JPG):</text>
+  <text x="140" y="942" class="bodyD">
+    Every receipt reflects the latest order edits, hold status, and processing-charge note.
+  </text>
+
+  <rect x="70" y="1035" width="940" height="235" rx="24" fill="#0f5b84"/>
+  <text x="115" y="1103" class="sectionTitle">Customer Trust Promise</text>
+  <text x="115" y="1148" class="bodyW">
+    Processing charges applied during shipping stages are temporary
+  </text>
+  <text x="115" y="1186" class="bodyW">
+    and fully refundable after successful package delivery.
+  </text>
+
+  <rect x="610" y="1120" width="360" height="108" rx="16" fill="#0b3550"/>
+  <text x="635" y="1183" class="cta">Track Now</text>
+  <text x="635" y="1215" class="bodyW">silverline-freight-services.online</text>
+</svg>
