@@ -100,20 +100,57 @@ def _build_receipt_image(order: ShipmentOrder) -> BytesIO:
     subtitle_font = _load_receipt_font(52, bold=False)
     label_font = _load_receipt_font(44, bold=True)
     body_font = _load_receipt_font(40, bold=False)
+    header_meta_font = _load_receipt_font(34, bold=False)
     note_title_font = _load_receipt_font(46, bold=True)
     note_body_font = _load_receipt_font(35, bold=False)
 
-    # Header block
-    draw.rounded_rectangle((60, 40, width - 60, 380), radius=26, fill="#0f5b84")
-    draw.text((110, 110), "SILVERLINE Freight Services", fill="white", font=title_font)
-    draw.text((110, 220), "Official Shipment Receipt (JPG)", fill="#d5ebf8", font=subtitle_font)
-    draw.rounded_rectangle((1320, 92, width - 120, 328), radius=20, fill="#0b4d71")
-    draw.text((1360, 138), f"Tracking: {order.tracking_number}", fill="white", font=body_font)
-    draw.text(
-        (1360, 218),
+    # Header block: split into two fixed panels to prevent overlap.
+    header_left = 60
+    header_top = 40
+    header_right = width - 60
+    header_bottom = 420
+    draw.rounded_rectangle((header_left, header_top, header_right, header_bottom), radius=26, fill="#0f5b84")
+
+    left_panel = (95, 82, 1500, 378)
+    right_panel = (1540, 82, width - 95, 378)
+    draw.rounded_rectangle(left_panel, radius=20, fill="#0f5b84")
+    draw.rounded_rectangle(right_panel, radius=20, fill="#0b4d71")
+
+    left_x = left_panel[0] + 36
+    left_y = left_panel[1] + 26
+    left_width = (left_panel[2] - left_panel[0]) - 72
+
+    title_lines = _wrap_text_to_width(draw, "SILVERLINE Freight Services", title_font, left_width)
+    title_y = left_y
+    title_gap = 8
+    for line in title_lines:
+        draw.text((left_x, title_y), line, fill="white", font=title_font)
+        title_y += _line_height(title_font) + title_gap
+
+    draw.text((left_x, title_y + 4), "Official Shipment Receipt (JPG)", fill="#d5ebf8", font=subtitle_font)
+
+    right_x = right_panel[0] + 30
+    right_y = right_panel[1] + 52
+    right_width = (right_panel[2] - right_panel[0]) - 60
+    right_y = _draw_wrapped_text(
+        draw,
+        f"Tracking: {order.tracking_number}",
+        right_x,
+        right_y,
+        max_width=right_width,
+        font=header_meta_font,
+        fill="white",
+        line_spacing=8,
+    )
+    _draw_wrapped_text(
+        draw,
         f"Issued: {_invoice_issued_timestamp()}",
+        right_x,
+        right_y + 10,
+        max_width=right_width,
+        font=header_meta_font,
         fill="#d5ebf8",
-        font=body_font,
+        line_spacing=8,
     )
 
     # Main body card
