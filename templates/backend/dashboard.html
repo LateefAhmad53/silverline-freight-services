@@ -101,6 +101,7 @@
                                 <td>
                                     <div class="quick-row-actions">
                                         <a href="{% url 'edit_order' order.id %}" class="btn btn-sm btn-outline">Edit</a>
+                                        <a href="{% url 'download_receipt_jpg' order.id %}" class="btn btn-sm btn-secondary">Receipt JPG</a>
                                         <form method="post" action="{% url 'delete_order' order.id %}" onsubmit="return confirm('Delete this order permanently?');">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>

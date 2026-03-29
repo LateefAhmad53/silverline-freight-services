@@ -53,10 +53,16 @@ class TrackingViewTests(TestCase):
         self.assertContains(response, order.tracking_number)
         self.assertContains(response, "Mobile Phones")
         self.assertContains(response, "Live Delivery Progress")
+        self.assertContains(response, "#terms-and-conditions")
 
     def test_services_page_loads(self):
         response = self.client.get(reverse("services"))
         self.assertEqual(response.status_code, 200)
+
+    def test_terms_section_is_available_on_homepage(self):
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, "Terms and Conditions")
+        self.assertContains(response, "Silverline Freight Delivery Services")
 
 
 class BackendAuthTests(TestCase):
@@ -126,3 +132,10 @@ class BackendAuthTests(TestCase):
         response = self.client.post(reverse("delete_order", kwargs={"order_id": self.order.id}))
         self.assertEqual(response.status_code, 302)
         self.assertFalse(ShipmentOrder.objects.filter(id=self.order.id).exists())
+
+    def test_receipt_jpg_can_be_downloaded(self):
+        self.client.login(username=self.user.username, password="TestPass123!")
+        response = self.client.get(reverse("download_receipt_jpg", kwargs={"order_id": self.order.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/jpeg")
+        self.assertIn(f"{self.order.tracking_number}-receipt.jpg", response["Content-Disposition"])

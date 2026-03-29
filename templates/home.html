@@ -120,6 +120,15 @@
                                 {% endif %}
                             </div>
                         {% endif %}
+
+                        <div class="terms-short-note">
+                            <p>
+                                <strong>Important Notice:</strong> Processing charges may apply during shipping stages
+                                for security, clearance, and regulatory compliance. These processing charges are fully
+                                refundable after successful delivery.
+                            </p>
+                            <a href="#terms-and-conditions" class="terms-tag">#terms-and-conditions</a>
+                        </div>
                     {% else %}
                         <h3>No shipment found</h3>
                         <p>Tracking number <strong>{{ tracking_number }}</strong> is not in our system yet. Please verify and try again.</p>
@@ -155,6 +164,118 @@
 
         <div class="container services-cta reveal delay-2">
             <a href="{% url 'services' %}" class="btn btn-primary">View Full Services</a>
+        </div>
+    </section>
+
+    <section id="terms-and-conditions" class="terms-section">
+        <div class="container reveal">
+            <p class="eyebrow">Terms and Conditions</p>
+            <h2>Silverline Freight Delivery Services</h2>
+            <p>
+                Welcome to Silverline Freight Delivery Services. By using our services, you agree to comply with and be
+                bound by the following Terms and Conditions. Please read them carefully.
+            </p>
+
+            <div class="terms-card">
+                <h3>1. Service Overview</h3>
+                <p>
+                    Silverline Freight Delivery Services provides logistics and delivery solutions designed to ensure safe,
+                    secure, and timely transportation of packages. Our process includes several mandatory stages required
+                    to meet international and local shipping standards.
+                </p>
+            </div>
+
+            <div class="terms-card">
+                <h3>2. Delivery Process Requirements</h3>
+                <p>To ensure successful delivery, all shipments must pass through the following stages:</p>
+                <ol>
+                    <li>Security and Safety Processing</li>
+                    <li>Clearance Procedures</li>
+                    <li>Regulatory Agency Processing</li>
+                    <li>Final Handling</li>
+                </ol>
+                <p>
+                    Each stage is essential to comply with shipping regulations and to guarantee the safe handling of all
+                    packages.
+                </p>
+            </div>
+
+            <div class="terms-card">
+                <h3>3. Processing Charges</h3>
+                <p>Charges are applied at each stage of the delivery process. These charges are:</p>
+                <ul>
+                    <li>Mandatory for all shipments</li>
+                    <li>Temporary in nature</li>
+                    <li>Required to facilitate compliance with security, customs, and regulatory requirements</li>
+                </ul>
+                <p>
+                    Failure to complete any required payment may result in delays or inability to complete delivery.
+                </p>
+            </div>
+
+            <div class="terms-card">
+                <h3>4. Refund Policy on Processing Charges</h3>
+                <p>All charges incurred during the processing stages are fully refundable upon successful delivery.</p>
+                <p>
+                    These fees are not permanent service costs. They are temporary deposits used to ensure that all
+                    regulatory and safety procedures are properly completed.
+                </p>
+                <p>Upon successful delivery:</p>
+                <ul>
+                    <li>The full amount of all processing charges will be refunded</li>
+                    <li>Refunds will be made through the original payment method, or</li>
+                    <li>Returned directly to the recipient by the courier at the point of delivery</li>
+                </ul>
+            </div>
+
+            <div class="terms-card">
+                <h3>5. Non-Refundable Fees</h3>
+                <p>
+                    The original shipping fee paid by the sender is non-refundable. This fee covers the actual transportation
+                    and logistics service provided and remains valid regardless of delivery outcome.
+                </p>
+            </div>
+
+            <div class="terms-card">
+                <h3>6. Customer Responsibilities</h3>
+                <p>Customers are responsible for:</p>
+                <ul>
+                    <li>Providing accurate delivery and contact information</li>
+                    <li>Complying with all payment requirements during the shipment process</li>
+                    <li>Ensuring that shipped items comply with applicable laws and regulations</li>
+                </ul>
+            </div>
+
+            <div class="terms-card">
+                <h3>7. Delays and Exceptions</h3>
+                <p>Silverline Freight Delivery Services shall not be held liable for delays caused by:</p>
+                <ul>
+                    <li>Customs or regulatory authorities</li>
+                    <li>Incorrect customer information</li>
+                    <li>Unforeseen circumstances beyond our control</li>
+                </ul>
+            </div>
+
+            <div class="terms-card">
+                <h3>8. Communication and Support</h3>
+                <p>
+                    We are committed to transparency and customer satisfaction. If you require clarification on any part of
+                    the delivery process or associated charges, please contact our support team for assistance.
+                </p>
+            </div>
+
+            <div class="terms-card">
+                <h3>9. Acceptance of Terms</h3>
+                <p>
+                    By using our services, you acknowledge that you have read, understood, and agreed to these Terms and
+                    Conditions.
+                </p>
+            </div>
+
+            <p class="terms-thanks">
+                Thank you for choosing Silverline Freight Delivery Services. We appreciate your trust and are committed to
+                delivering your packages safely and efficiently.
+            </p>
         </div>
     </section>
 </main>

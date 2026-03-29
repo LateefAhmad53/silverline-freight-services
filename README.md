@@ -10,6 +10,8 @@ Standard delivery website with:
 - Live delivery progress per shipment (0-100), controlled from backend
 - Withhold/release workflow managed from backend
 - Hold status message shown on client tracking view
+- JPG receipt generation/download per order from backend
+- Full Terms and Conditions section on frontend with refundable charge notice
 
 ## Tech Stack
 

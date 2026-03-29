@@ -1,4 +1,6 @@
 import json
+from io import BytesIO
+from textwrap import wrap
 from datetime import timedelta
 
 from django.contrib import messages
@@ -11,6 +13,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods, require_POST
+from PIL import Image, ImageDraw, ImageFont
 
 from .forms import (
     ShipmentHoldForm,
@@ -21,6 +24,115 @@ from .forms import (
     TrackShipmentForm,
 )
 from .models import ShipmentOrder
+
+TERMS_SHORT_NOTE = (
+    "Processing charges can apply during security, clearance, and regulatory stages. "
+    "These processing charges are temporary and fully refundable after successful delivery."
+)
+
+
+def _draw_wrapped_text(draw, text, x, y, max_chars=86, font=None, fill="#1c2e40", line_height=22):
+    lines = []
+    for paragraph in str(text).split("\n"):
+        wrapped = wrap(paragraph, width=max_chars) or [""]
+        lines.extend(wrapped)
+    for line in lines:
+        draw.text((x, y), line, fill=fill, font=font)
+        y += line_height
+    return y
+
+
+def _build_receipt_image(order: ShipmentOrder) -> BytesIO:
+    width, height = 1400, 1750
+    image = Image.new("RGB", (width, height), "#f4f7fb")
+    draw = ImageDraw.Draw(image)
+    title_font = ImageFont.load_default()
+    body_font = ImageFont.load_default()
+
+    # Header block
+    draw.rounded_rectangle((40, 30, width - 40, 220), radius=18, fill="#0f5b84")
+    draw.text((75, 70), "SILVERLINE Freight Services", fill="white", font=title_font)
+    draw.text((75, 110), "Official Shipment Receipt (JPG)", fill="#d5ebf8", font=body_font)
+    draw.text((980, 75), f"Tracking: {order.tracking_number}", fill="white", font=body_font)
+    draw.text(
+        (980, 115),
+        f"Issued: {timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')}",
+        fill="#d5ebf8",
+        font=body_font,
+    )
+
+    # Main body card
+    draw.rounded_rectangle((40, 250, width - 40, 1320), radius=18, fill="white", outline="#dbe4ee")
+    y = 290
+    left_x = 80
+
+    rows = [
+        ("Sender", order.sender_name or "-"),
+        ("Receiver", order.receiver_name or "-"),
+        ("From Address", order.from_address),
+        ("To Address", order.to_address),
+        ("Current Location", order.current_location or "-"),
+        ("Status", order.get_status_display()),
+        ("Progress", f"{order.progress_percent}%"),
+        ("Item Name", order.item_name or "-"),
+        ("Item Quantity", str(order.item_quantity)),
+        ("Item Weight (kg)", str(order.item_weight_kg or "-")),
+        ("Expected Delivery", str(order.expected_delivery_date or "-")),
+        (
+            "Hold Charge",
+            f"${order.hold_amount}" if order.hold_amount else "No active processing charge",
+        ),
+    ]
+
+    for label, value in rows:
+        draw.text((left_x, y), f"{label}:", fill="#35516b", font=body_font)
+        y = _draw_wrapped_text(draw, value, left_x + 220, y, max_chars=62, font=body_font, line_height=24)
+        y += 10
+        draw.line((left_x, y, width - 80, y), fill="#edf2f7", width=1)
+        y += 20
+
+    if order.item_description:
+        draw.text((left_x, y), "Item Description:", fill="#35516b", font=body_font)
+        y = _draw_wrapped_text(
+            draw,
+            order.item_description,
+            left_x + 220,
+            y,
+            max_chars=62,
+            font=body_font,
+            line_height=24,
+        )
+
+    # Terms note block (required short note)
+    note_top = 1360
+    draw.rounded_rectangle((40, note_top, width - 40, 1650), radius=18, fill="#fff6eb", outline="#eed4ab")
+    draw.text((75, note_top + 28), "Processing Charges & Refund Note", fill="#8d4a12", font=title_font)
+    _draw_wrapped_text(
+        draw,
+        TERMS_SHORT_NOTE,
+        75,
+        note_top + 65,
+        max_chars=96,
+        font=body_font,
+        fill="#6d3f12",
+        line_height=24,
+    )
+    if order.hold_active and order.hold_message:
+        _draw_wrapped_text(
+            draw,
+            f"Current Order Hold Notice: {order.hold_message}",
+            75,
+            note_top + 145,
+            max_chars=96,
+            font=body_font,
+            fill="#6d3f12",
+            line_height=24,
+        )
+
+    buffer = BytesIO()
+    image.save(buffer, format="JPEG", quality=95)
+    buffer.seek(0)
+    return buffer
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -217,3 +329,12 @@ def delete_order(request: HttpRequest, order_id: int) -> HttpResponse:
     order.delete()
     messages.success(request, f"Order {tracking_number} was deleted.")
     return redirect("dashboard")
+
+
+@login_required
+def download_receipt_jpg(request: HttpRequest, order_id: int) -> HttpResponse:
+    order = get_object_or_404(ShipmentOrder, id=order_id)
+    image_stream = _build_receipt_image(order)
+    response = HttpResponse(image_stream.getvalue(), content_type="image/jpeg")
+    response["Content-Disposition"] = f'attachment; filename="{order.tracking_number}-receipt.jpg"'
+    return response

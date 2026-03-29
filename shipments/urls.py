@@ -15,4 +15,5 @@ urlpatterns = [
     path("backend/orders/<int:order_id>/progress/", views.update_progress, name="update_progress"),
     path("backend/orders/<int:order_id>/edit/", views.edit_order, name="edit_order"),
     path("backend/orders/<int:order_id>/delete/", views.delete_order, name="delete_order"),
+    path("backend/orders/<int:order_id>/receipt.jpg", views.download_receipt_jpg, name="download_receipt_jpg"),
 ]

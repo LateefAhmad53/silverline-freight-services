@@ -229,6 +229,12 @@ nav a:hover {
     color: #a11a20;
 }
 
+.btn-secondary {
+    background: #e7f4fc;
+    color: #0f5b84;
+    border: 1px solid #b6d8eb;
+}
+
 .tracking-section {
     padding: 2.2rem 0 2.7rem;
 }
@@ -438,6 +444,78 @@ nav a:hover {
 .hold-amount {
     font-weight: 800;
     color: var(--danger);
+}
+
+.terms-short-note {
+    margin-top: 1rem;
+    background: #f3fbf7;
+    border: 1px solid #cae7d8;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+}
+
+.terms-short-note p {
+    margin: 0;
+    color: #24533d;
+}
+
+.terms-tag {
+    display: inline-flex;
+    margin-top: 0.45rem;
+    font-weight: 700;
+    color: #0f5b84;
+}
+
+.terms-section {
+    padding: 1.6rem 0 3rem;
+}
+
+.terms-section h2 {
+    margin-top: 0.45rem;
+    margin-bottom: 0.65rem;
+    font-family: "Sora", sans-serif;
+}
+
+.terms-section > .container > p {
+    color: #334b62;
+    max-width: 90ch;
+}
+
+.terms-card {
+    margin-top: 0.85rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0.95rem 1rem;
+    box-shadow: 0 10px 24px rgba(12, 20, 33, 0.06);
+}
+
+.terms-card h3 {
+    margin: 0 0 0.45rem;
+    font-family: "Sora", sans-serif;
+    font-size: 1.02rem;
+}
+
+.terms-card p {
+    margin: 0.3rem 0;
+    color: #324a60;
+}
+
+.terms-card ul,
+.terms-card ol {
+    margin: 0.4rem 0;
+    padding-left: 1.25rem;
+    color: #324a60;
+}
+
+.terms-card li {
+    margin-bottom: 0.3rem;
+}
+
+.terms-thanks {
+    margin-top: 1rem;
+    font-weight: 700;
+    color: #18344e;
 }
 
 .services {
@@ -800,6 +878,13 @@ nav a:hover {
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: 0.8rem;
+}
+
+.edit-head-actions {
+    display: flex;
+    gap: 0.55rem;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .edit-order-head h1 {

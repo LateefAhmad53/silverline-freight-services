@@ -8,7 +8,10 @@
                 <p class="eyebrow">Order Editor</p>
                 <h1>Edit Shipment {{ order.tracking_number }}</h1>
             </div>
-            <a href="{% url 'dashboard' %}" class="btn btn-outline">Back to Dashboard</a>
+            <div class="edit-head-actions">
+                <a href="{% url 'download_receipt_jpg' order.id %}" class="btn btn-secondary">Download Receipt JPG</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline">Back to Dashboard</a>
+            </div>
         </div>
 
         <form method="post" class="stack-form">
