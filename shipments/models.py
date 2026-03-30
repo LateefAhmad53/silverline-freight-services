@@ -13,6 +13,10 @@ class ShipmentOrder(models.Model):
         ON_HOLD = "on_hold", "On Hold"
         DELIVERED = "delivered", "Delivered"
 
+    class NoticeOption(models.TextChoices):
+        DEFAULT_NOTICE = "default_notice", "Option 1 - Processing Charges Notice"
+        ORDER_CHARGES = "order_charges", "Option 2 - Order Charges Notice"
+
     tracking_number = models.CharField(max_length=14, unique=True, editable=False, db_index=True)
     from_address = models.TextField()
     to_address = models.TextField()
@@ -31,6 +35,11 @@ class ShipmentOrder(models.Model):
         max_length=24,
         choices=ShipmentStatus.choices,
         default=ShipmentStatus.PENDING,
+    )
+    client_notice_option = models.CharField(
+        max_length=24,
+        choices=NoticeOption.choices,
+        default=NoticeOption.DEFAULT_NOTICE,
     )
     hold_active = models.BooleanField(default=False)
     hold_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

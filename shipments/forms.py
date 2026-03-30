@@ -34,8 +34,12 @@ class ShipmentOrderCreateForm(forms.ModelForm):
             "current_location",
             "progress_percent",
             "status",
+            "client_notice_option",
             "expected_delivery_date",
         ]
+        labels = {
+            "client_notice_option": "Important Notice Option (Client Tracking Page)",
+        }
         widgets = {
             "sender_name": forms.TextInput(attrs={"class": "input-field", "placeholder": "Sender full name"}),
             "receiver_name": forms.TextInput(attrs={"class": "input-field", "placeholder": "Receiver full name"}),
@@ -60,6 +64,7 @@ class ShipmentOrderCreateForm(forms.ModelForm):
                 attrs={"class": "input-field", "min": 0, "max": 100, "placeholder": "0 to 100"}
             ),
             "status": forms.Select(attrs={"class": "input-field"}),
+            "client_notice_option": forms.Select(attrs={"class": "input-field"}),
             "expected_delivery_date": forms.DateInput(attrs={"class": "input-field", "type": "date"}),
         }
 

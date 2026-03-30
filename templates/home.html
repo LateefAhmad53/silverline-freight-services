@@ -122,11 +122,35 @@
                         {% endif %}
 
                         <div class="terms-short-note">
-                            <p>
-                                <strong>Important Notice:</strong> Processing charges may apply during shipping stages
-                                for security, clearance, and regulatory compliance. These processing charges are fully
-                                refundable after successful delivery.
-                            </p>
+                            <p><strong>Important Notice:</strong></p>
+                            {% if order.client_notice_option == "order_charges" %}
+                                <p><strong>Order Charges</strong></p>
+                                <p>Certain charges may apply to all orders:</p>
+                                <p><strong>Additional Processing Charges (mandatory)</strong></p>
+                                <p>These charges are required before your order can be processed:</p>
+                                <ul>
+                                    <li>Last Mile Delivery</li>
+                                    <li>Delivery Confirmation</li>
+                                    <li>Final Inspection</li>
+                                    <li>Immediate Delivery Queue Fee</li>
+                                    <li>End-of-Line Processing</li>
+                                </ul>
+                                <p><strong>Optional Charge</strong></p>
+                                <p>This charge is optional and applied only if selected:</p>
+                                <ul>
+                                    <li>Signature Collection</li>
+                                </ul>
+                                <p>
+                                    <strong>Note:</strong> All applicable fees are refundable where eligible. Orders
+                                    cannot be processed until all required processing charges are completed.
+                                </p>
+                            {% else %}
+                                <p>
+                                    Processing charges may apply during shipping stages for security, clearance, and
+                                    regulatory compliance. These processing charges are fully refundable after
+                                    successful delivery.
+                                </p>
+                            {% endif %}
                             <a href="#terms-and-conditions" class="terms-tag">#terms-and-conditions</a>
                         </div>
                     {% else %}

@@ -459,6 +459,19 @@ nav a:hover {
     color: #24533d;
 }
 
+.terms-short-note p + p {
+    margin-top: 0.45rem;
+}
+
+.terms-short-note ul {
+    margin: 0.35rem 0 0.45rem 1.2rem;
+    color: #24533d;
+}
+
+.terms-short-note li {
+    margin-bottom: 0.2rem;
+}
+
 .terms-tag {
     display: inline-flex;
     margin-top: 0.45rem;
