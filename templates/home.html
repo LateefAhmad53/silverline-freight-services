@@ -69,6 +69,14 @@
                                 <table class="tracking-table">
                                     <tbody>
                                         <tr>
+                                            <th>Sender Name</th>
+                                            <td>{{ order.sender_name|default:"-" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Receiver Name</th>
+                                            <td>{{ order.receiver_name|default:"-" }}</td>
+                                        </tr>
+                                        <tr>
                                             <th>From Address</th>
                                             <td>{{ order.from_address }}</td>
                                         </tr>
