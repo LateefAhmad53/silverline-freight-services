@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import ShipmentOrder
+from .models import ShipmentOrder, ShipmentReceipt
 
 
 class TrackShipmentForm(forms.Form):
@@ -121,3 +121,44 @@ class ShipmentProgressForm(forms.ModelForm):
                 attrs={"class": "input-field slim", "min": 0, "max": 100}
             )
         }
+
+
+class ShipmentReceiptGeneratorForm(forms.ModelForm):
+    class Meta:
+        model = ShipmentReceipt
+        fields = [
+            "location",
+            "device_id",
+            "tid",
+            "item",
+            "recipient_address",
+            "recipient_name",
+            "recipient_number",
+            "schedule_delivery_date",
+            "pricing_option",
+            "shipping_subtotal",
+            "custom_charges",
+            "total",
+        ]
+        widgets = {
+            "location": forms.TextInput(attrs={"class": "input-field", "placeholder": "e.g. New York Hub"}),
+            "device_id": forms.TextInput(attrs={"class": "input-field", "placeholder": "e.g. DEV-4041"}),
+            "tid": forms.TextInput(attrs={"class": "input-field", "placeholder": "Transaction ID"}),
+            "item": forms.TextInput(attrs={"class": "input-field", "placeholder": "e.g. Apple iPad Pro"}),
+            "recipient_address": forms.TextInput(
+                attrs={"class": "input-field", "placeholder": "Recipient address as it appears on receipt"}
+            ),
+            "recipient_name": forms.TextInput(attrs={"class": "input-field", "placeholder": "Recipient full name"}),
+            "recipient_number": forms.TextInput(attrs={"class": "input-field", "placeholder": "Recipient phone"}),
+            "schedule_delivery_date": forms.DateInput(attrs={"class": "input-field", "type": "date"}),
+            "pricing_option": forms.TextInput(attrs={"class": "input-field", "placeholder": "Standard rate"}),
+            "shipping_subtotal": forms.NumberInput(attrs={"class": "input-field", "step": "0.01", "min": "0"}),
+            "custom_charges": forms.NumberInput(attrs={"class": "input-field", "step": "0.01", "min": "0"}),
+            "total": forms.NumberInput(
+                attrs={"class": "input-field", "step": "0.01", "min": "0", "placeholder": "Auto if left blank"}
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["total"].required = False

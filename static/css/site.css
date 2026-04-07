@@ -698,6 +698,23 @@ nav a:hover {
     margin-bottom: 0.9rem;
 }
 
+.receipt-generator-panel,
+.receipt-history-panel {
+    margin-bottom: 0.9rem;
+}
+
+.receipt-generator-note {
+    margin: -0.1rem 0 0.85rem;
+    color: #35506a;
+}
+
+.receipt-generator-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 0.65rem 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
 .dashboard-search-form {
     display: flex;
     gap: 0.55rem;
@@ -1060,6 +1077,7 @@ nav a:hover {
 @media (max-width: 960px) {
     .hero-grid,
     .dashboard-grid,
+    .receipt-generator-grid,
     .service-hero-grid,
     .service-cards,
     .process-grid,

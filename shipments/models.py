@@ -1,5 +1,6 @@
 import secrets
 import string
+from decimal import Decimal, InvalidOperation
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -117,3 +118,44 @@ class ShipmentOrder(models.Model):
                 "updated_at",
             ]
         )
+
+
+class ShipmentReceipt(models.Model):
+    location = models.CharField(max_length=180)
+    device_id = models.CharField(max_length=120)
+    tid = models.CharField(max_length=120)
+    item = models.CharField(max_length=200)
+    recipient_address = models.CharField(max_length=260)
+    recipient_name = models.CharField(max_length=160)
+    recipient_number = models.CharField(max_length=90)
+    schedule_delivery_date = models.DateField()
+    pricing_option = models.CharField(max_length=120, default="Standard rate")
+    shipping_subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    custom_charges = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    created_by = models.ForeignKey(
+        "auth.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="generated_receipts",
+    )
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-updated_at"]
+
+    def __str__(self):
+        return f"Receipt #{self.id} - {self.recipient_name} ({self.schedule_delivery_date})"
+
+    def save(self, *args, **kwargs):
+        if self.total is None:
+            try:
+                subtotal = Decimal(str(self.shipping_subtotal or "0"))
+                custom = Decimal(str(self.custom_charges or "0"))
+            except InvalidOperation:
+                subtotal = Decimal("0")
+                custom = Decimal("0")
+            self.total = subtotal + custom
+        super().save(*args, **kwargs)

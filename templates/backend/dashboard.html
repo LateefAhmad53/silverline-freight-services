@@ -13,6 +13,79 @@
         </form>
     </section>
 
+    <section class="container receipt-generator-panel reveal">
+        <article class="card">
+            <h2>Shipment Receipt Generator</h2>
+            <p class="receipt-generator-note">
+                Fill the receipt fields and click generate. The details are saved for future edits and the completed
+                receipt image downloads instantly.
+            </p>
+            <form method="post" action="{% url 'generate_manual_receipt' %}" class="stack-form">
+                {% csrf_token %}
+                <div class="receipt-generator-grid">
+                    {% for field in receipt_form %}
+                        <div class="field-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <small class="form-error">{{ field.errors|striptags }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Generate Receipt Image</button>
+            </form>
+        </article>
+    </section>
+
+    <section class="container receipt-history-panel reveal delay-1">
+        <article class="card">
+            <h2>Generated Shipment Receipts</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Recipient</th>
+                            <th>Date</th>
+                            <th>Charges</th>
+                            <th>Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for receipt in recent_receipts %}
+                            <tr>
+                                <td>#{{ receipt.id }}</td>
+                                <td>
+                                    <strong>{{ receipt.recipient_name }}</strong><br />
+                                    <small>{{ receipt.recipient_number }}</small>
+                                </td>
+                                <td>{{ receipt.schedule_delivery_date|date:"Y-m-d" }}</td>
+                                <td>
+                                    <small>Subtotal: ${{ receipt.shipping_subtotal }}</small><br />
+                                    <small>Custom: ${{ receipt.custom_charges }}</small><br />
+                                    <strong>Total: ${{ receipt.total }}</strong>
+                                </td>
+                                <td>{{ receipt.updated_at|date:"Y-m-d H:i" }}</td>
+                                <td>
+                                    <div class="quick-row-actions">
+                                        <a href="{% url 'edit_manual_receipt' receipt.id %}" class="btn btn-sm btn-outline">Edit</a>
+                                        <a href="{% url 'download_manual_receipt' receipt.id %}" class="btn btn-sm btn-secondary">Download</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6">No generated receipts yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
     <section class="container dashboard-toolbar reveal delay-1">
         <form method="get" class="dashboard-search-form">
             <input

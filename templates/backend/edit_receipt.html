@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Edit Shipment Receipt | SILVERLINE Freight Services{% endblock %}
+{% block content %}
+<main class="dashboard-main">
+    <section class="container edit-order-card reveal">
+        <div class="edit-order-head">
+            <div>
+                <p class="eyebrow">Receipt Editor</p>
+                <h1>Edit Shipment Receipt #{{ receipt.id }}</h1>
+            </div>
+            <div class="edit-head-actions">
+                <a href="{% url 'download_manual_receipt' receipt.id %}" class="btn btn-secondary">Download Current Receipt</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline">Back to Dashboard</a>
+            </div>
+        </div>
+
+        <form method="post" class="stack-form">
+            {% csrf_token %}
+            <div class="receipt-generator-grid">
+                {% for field in form %}
+                    <div class="field-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <small class="form-error">{{ field.errors|striptags }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="edit-head-actions">
+                <button type="submit" class="btn btn-primary">Save Receipt Changes</button>
+                <button type="submit" class="btn btn-secondary" name="action" value="generate">Generate & Download</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}
