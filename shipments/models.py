@@ -121,9 +121,9 @@ class ShipmentOrder(models.Model):
 
 
 class ShipmentReceipt(models.Model):
-    location = models.CharField(max_length=180)
-    device_id = models.CharField(max_length=120)
-    tid = models.CharField(max_length=120)
+    location = models.CharField(max_length=180, blank=True, default="")
+    device_id = models.CharField(max_length=120, blank=True, default="")
+    tid = models.CharField(max_length=120, blank=True, default="")
     item = models.CharField(max_length=200)
     recipient_address = models.CharField(max_length=260)
     recipient_name = models.CharField(max_length=160)

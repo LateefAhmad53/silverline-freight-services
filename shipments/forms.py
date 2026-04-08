@@ -161,4 +161,7 @@ class ShipmentReceiptGeneratorForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["location"].required = False
+        self.fields["device_id"].required = False
+        self.fields["tid"].required = False
         self.fields["total"].required = False

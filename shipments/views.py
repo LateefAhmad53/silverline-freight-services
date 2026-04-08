@@ -34,6 +34,9 @@ TERMS_SHORT_NOTE = (
     "These processing charges are temporary and fully refundable after successful delivery."
 )
 
+MANUAL_RECEIPT_BASE_WIDTH = 853
+MANUAL_RECEIPT_BASE_HEIGHT = 1280
+
 
 def _load_receipt_font(size: int, *, bold: bool = False):
     candidates = [
@@ -311,36 +314,75 @@ def _build_manual_receipt_image(receipt: ShipmentReceipt) -> BytesIO:
     image = Image.open(template_path).convert("RGB")
     draw = ImageDraw.Draw(image)
 
-    font = _load_receipt_font(20)
-    bold_font = _load_receipt_font(22, bold=True)
-    small_font = _load_receipt_font(20)
-    ink = "#222222"
+    width_scale = image.width / MANUAL_RECEIPT_BASE_WIDTH
+    height_scale = image.height / MANUAL_RECEIPT_BASE_HEIGHT
+    scale = min(width_scale, height_scale)
+
+    def sx(value: int) -> int:
+        return int(round(value * width_scale))
+
+    def sy(value: int) -> int:
+        return int(round(value * height_scale))
+
+    def sw(value: int) -> int:
+        return max(1, int(round(value * width_scale)))
+
+    base_font_size = max(14, int(round(18 * scale)))
+    font = _load_receipt_font(base_font_size)
+    amount_font = _load_receipt_font(max(13, int(round(16 * scale))))
+    ink = "#1f1f1f"
 
     # Top identity fields.
-    _draw_trimmed_text(draw, receipt.location, 175, 246, 330, font=font, fill=ink)
-    _draw_trimmed_text(draw, receipt.device_id, 175, 268, 330, font=font, fill=ink)
-    _draw_trimmed_text(draw, receipt.tid, 165, 290, 340, font=font, fill=ink)
+    _draw_trimmed_text(draw, receipt.location, sx(248), sy(246), sw(205), font=font, fill=ink)
+    _draw_trimmed_text(draw, receipt.device_id, sx(246), sy(268), sw(207), font=font, fill=ink)
+    _draw_trimmed_text(draw, receipt.tid, sx(219), sy(290), sw(237), font=font, fill=ink)
 
     # Mid body fields.
-    _draw_trimmed_text(draw, receipt.item, 178, 447, 350, font=small_font, fill=ink)
-    _draw_trimmed_text(draw, receipt.recipient_address, 255, 628, 273, font=small_font, fill=ink)
-    _draw_trimmed_text(draw, receipt.recipient_name, 330, 665, 198, font=small_font, fill=ink)
-    _draw_trimmed_text(draw, receipt.recipient_number, 340, 703, 188, font=small_font, fill=ink)
+    _draw_trimmed_text(draw, receipt.item, sx(224), sy(447), sw(304), font=font, fill=ink)
+    _draw_trimmed_text(draw, receipt.recipient_address, sx(301), sy(628), sw(229), font=font, fill=ink)
+    _draw_trimmed_text(draw, receipt.recipient_name, sx(313), sy(665), sw(217), font=font, fill=ink)
+    _draw_trimmed_text(draw, receipt.recipient_number, sx(338), sy(703), sw(192), font=font, fill=ink)
     _draw_trimmed_text(
         draw,
         receipt.schedule_delivery_date.strftime("%m-%d-%Y"),
-        380,
-        742,
-        148,
-        font=small_font,
+        sx(365),
+        sy(742),
+        sw(165),
+        font=font,
         fill=ink,
     )
-    _draw_trimmed_text(draw, receipt.pricing_option, 390, 767, 138, font=small_font, fill=ink)
+    pricing_text = str(receipt.pricing_option or "").strip()
+    if pricing_text and pricing_text.lower() not in {"standard", "standard rate"}:
+        _draw_trimmed_text(draw, pricing_text, sx(367), sy(767), sw(163), font=font, fill=ink)
 
     # Charges area.
-    _draw_trimmed_text(draw, _format_currency(receipt.shipping_subtotal), 380, 852, 138, font=bold_font, fill=ink)
-    _draw_trimmed_text(draw, _format_currency(receipt.custom_charges), 372, 883, 146, font=bold_font, fill=ink)
-    _draw_trimmed_text(draw, _format_currency(receipt.total), 246, 914, 182, font=bold_font, fill=ink)
+    _draw_trimmed_text(
+        draw,
+        _format_receipt_amount(receipt.shipping_subtotal),
+        sx(412),
+        sy(848),
+        sw(118),
+        font=amount_font,
+        fill=ink,
+    )
+    _draw_trimmed_text(
+        draw,
+        _format_receipt_amount(receipt.custom_charges),
+        sx(419),
+        sy(874),
+        sw(111),
+        font=amount_font,
+        fill=ink,
+    )
+    _draw_trimmed_text(
+        draw,
+        _format_receipt_amount(receipt.total),
+        sx(350),
+        sy(889),
+        sw(81),
+        font=amount_font,
+        fill=ink,
+    )
 
     buffer = BytesIO()
     image.save(buffer, format="JPEG", quality=95)
@@ -363,6 +405,14 @@ def _format_currency(value) -> str:
     except (InvalidOperation, TypeError):
         amount = Decimal("0")
     return f"${amount:.2f}"
+
+
+def _format_receipt_amount(value) -> str:
+    try:
+        amount = Decimal(str(value))
+    except (InvalidOperation, TypeError):
+        amount = Decimal("0")
+    return f"{amount:.2f}"
 
 
 def home(request: HttpRequest) -> HttpResponse:

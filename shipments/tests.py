@@ -1,8 +1,10 @@
+from datetime import date
+
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from .models import ShipmentOrder
+from .models import ShipmentOrder, ShipmentReceipt
 
 
 class ShipmentOrderModelTests(TestCase):
@@ -120,6 +122,7 @@ class BackendAuthTests(TestCase):
                 "current_location": self.order.current_location,
                 "progress_percent": self.order.progress_percent,
                 "status": self.order.status,
+                "client_notice_option": self.order.client_notice_option,
                 "expected_delivery_date": self.order.expected_delivery_date or "",
             },
         )
@@ -139,3 +142,53 @@ class BackendAuthTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "image/jpeg")
         self.assertIn(f"{self.order.tracking_number}-receipt.jpg", response["Content-Disposition"])
+
+    def test_manual_receipt_generation_saves_and_downloads(self):
+        self.client.login(username=self.user.username, password="TestPass123!")
+        response = self.client.post(
+            reverse("generate_manual_receipt"),
+            {
+                "location": ".",
+                "device_id": "d",
+                "tid": "***********",
+                "item": "Apple iPad Pro",
+                "recipient_address": "601 Dupont Hwy, Harrington Manor, DE 19720",
+                "recipient_name": "Usman khawar",
+                "recipient_number": "Khawar,Usman(...)",
+                "schedule_delivery_date": date(2026, 4, 7).isoformat(),
+                "pricing_option": "Standard rate",
+                "shipping_subtotal": "51.00",
+                "custom_charges": "51.00",
+                "total": "102.00",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/jpeg")
+        self.assertIn("shipment-receipt-", response["Content-Disposition"])
+        self.assertEqual(ShipmentReceipt.objects.count(), 1)
+
+    def test_manual_receipt_generation_allows_empty_identity_fields(self):
+        self.client.login(username=self.user.username, password="TestPass123!")
+        response = self.client.post(
+            reverse("generate_manual_receipt"),
+            {
+                "location": "",
+                "device_id": "",
+                "tid": "",
+                "item": "Apple iPad Pro",
+                "recipient_address": "601 Dupont Hwy, Harrington Manor, DE 19720",
+                "recipient_name": "Usman khawar",
+                "recipient_number": "Khawar,Usman(...)",
+                "schedule_delivery_date": date(2026, 4, 7).isoformat(),
+                "pricing_option": "Standard rate",
+                "shipping_subtotal": "51.00",
+                "custom_charges": "51.00",
+                "total": "102.00",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/jpeg")
+        receipt = ShipmentReceipt.objects.get()
+        self.assertEqual(receipt.location, "")
+        self.assertEqual(receipt.device_id, "")
+        self.assertEqual(receipt.tid, "")
