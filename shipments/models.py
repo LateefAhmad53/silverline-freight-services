@@ -100,7 +100,7 @@ class ShipmentOrder(models.Model):
         self.hold_reason = reason
         self.hold_message = message or self.hold_message
         self.status = self.ShipmentStatus.ON_HOLD
-        self.save(update_fields=["hold_active", "hold_amount", "hold_reason", "hold_message", "status", "updated_at"])
+        self.save(update_fields=["hold_active", "hold_amount", "hold_reason", "hold_message", "status"])
 
     def release_hold(self):
         self.hold_active = False
@@ -115,7 +115,6 @@ class ShipmentOrder(models.Model):
                 "hold_amount",
                 "hold_reason",
                 "hold_message",
-                "updated_at",
             ]
         )
 
