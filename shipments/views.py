@@ -585,8 +585,6 @@ def create_order(request: HttpRequest) -> HttpResponse:
 
 @login_required
 @require_POST
-@login_required
-@require_POST
 def place_hold(request: HttpRequest, order_id: int) -> HttpResponse:
     order = get_object_or_404(ShipmentOrder, id=order_id)
     form = ShipmentHoldForm(request.POST)
